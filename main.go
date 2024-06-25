@@ -17,25 +17,27 @@ var (
 
 func main() {
 	flag.Parse()
-
 	hass.Get("states/number.pan")
+	run()
+}
 
-	webWin := cv.NewWinHook(webCam, &cv.Tracker{Handler: matrix_light, Pos: 50, Max: 100})
+func run() {
+
+	classify := cv.NewClassifyHook()
+
+	webWin := cv.NewWinHook(webCam, &cv.Tracker{Handler: matrix_light, Title: "Brightness", Pos: 50, Max: 100})
 	webStream := cv.NewStreamHook()
 	http.Handle("/", webStream.Stream)
 	webQuit := make(chan int)
-	go cv.Capture(webQuit, webCam, webWin, webStream)
+	go cv.Capture(webQuit, webCam, classify, webWin, webStream)
 
-	ipWin := cv.NewWinHook(ipCam, &cv.Tracker{Handler: pan, Pos: 90, Max: 180})
+	ipWin := cv.NewWinHook(ipCam, &cv.Tracker{Handler: pan, Title: "Pan Camera", Pos: 90, Max: 180})
 	ipStream := cv.NewStreamHook()
 	http.Handle("/1/", ipStream.Stream)
 	ipQuit := make(chan int)
-	go cv.Capture(ipQuit, ipCam, ipWin, ipStream)
+	go cv.Capture(ipQuit, ipCam, classify, ipWin, ipStream)
 
-	var (
-		url = "192.168.0.7:9000"
-	)
-
+	url := "192.168.0.7:9000"
 	fmt.Println("Capturing. Point your browser to " + url)
 
 	server := &http.Server{
@@ -45,7 +47,6 @@ func main() {
 	}
 
 	log.Fatal(server.ListenAndServe())
-
 }
 
 func pan(value int) {
@@ -57,3 +58,7 @@ func matrix_light(value int) {
 	cmd := fmt.Sprintf(`{"entity_id": "light.led_matrix_24","effect": "rainbow-vertical","brightness_pct": %d}`, value)
 	hass.Post("services/light/turn_on", cmd)
 }
+
+// func mattype(mat *gocv.Mat) {
+// 	image, _ := mat.ToImage()
+// }

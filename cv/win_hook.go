@@ -18,7 +18,7 @@ func NewWinHook(device any, trackers ...*Tracker) *WinHook {
 	wh.window = gocv.NewWindow(fmt.Sprint("Camera:", device))
 	wh.trackers = make([]*Tracker, len(trackers))
 	for i, tr := range trackers {
-		tr.trackBar = wh.window.CreateTrackbar("pan", tr.Max)
+		tr.trackBar = wh.window.CreateTrackbar(tr.Title, tr.Max)
 		tr.trackBar.SetPos(tr.Pos)
 		wh.trackers[i] = tr
 	}

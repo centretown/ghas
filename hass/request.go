@@ -9,7 +9,6 @@ import (
 	"net/http"
 )
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI1ODVkNWQzM2Y3NjQ0MGRiYTUxMTNmZTg2YTEyMGEyOCIsImlhdCI6MTcxOTA2MDU2MywiZXhwIjoyMDM0NDIwNTYzfQ.FLxeIaupCglzfEZ4jZF4jtaFJDL-6RsgAxC6r9gO5Os"
 const host = "http://melon:8123"
 const api = "/api/"
 
@@ -42,7 +41,7 @@ func Post(cmd string, body string) error {
 
 func Request(req *http.Request) error {
 	client := &http.Client{}
-	req.Header.Add("Authorization", "Bearer "+token)
+	req.Header.Add("Authorization", "Bearer "+Token)
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Println(err, "PROCESS")
