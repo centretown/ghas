@@ -8,12 +8,12 @@ import (
 )
 
 type StreamHook struct {
-	stream *mjpeg.Stream
+	Stream *mjpeg.Stream
 }
 
 func NewStreamHook() *StreamHook {
 	sh := &StreamHook{}
-	sh.stream = mjpeg.NewStream()
+	sh.Stream = mjpeg.NewStream()
 	return sh
 }
 
@@ -26,7 +26,7 @@ func (sh *StreamHook) Update(img *gocv.Mat) {
 		return
 	}
 
-	sh.stream.UpdateJPEG(buf.GetBytes())
+	sh.Stream.UpdateJPEG(buf.GetBytes())
 	buf.Close()
 }
 
